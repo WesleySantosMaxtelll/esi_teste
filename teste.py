@@ -78,7 +78,7 @@ from Interface import Interface
 print('inicio')
 i = Interface.instance()
 
-
+print(i.busque_n_relacionados(10, 5))
 #
 # b = Busca()
 # b.atribui_ordenacao('preco')
@@ -91,7 +91,7 @@ i = Interface.instance()
 print('comeca busca')
 initial_time = time.time()
 
-print(i.devolveNprodutosRecomendados(5, 10))
+# print(i.devolveNprodutosRecomendados(5, 10))
 
 # print(len(i.busque(b)))
 

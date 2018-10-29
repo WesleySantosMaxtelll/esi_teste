@@ -1,7 +1,6 @@
 import psycopg2
 import datetime
 
-
 class AcessaBD():
     global conn
     global cur
@@ -87,7 +86,7 @@ class AcessaBD():
                          + "preco between " + str(min_preco) + " and " + str(max_preco) + " order by vizualizado desc;")
         resp = self.cur.fetchall()
         return [i[0] for i in resp], [i[1] for i in resp], [i[2] for i in resp], [i[3] for i in resp]
-
+    
 
     # Recomendacoes
     def devolveNrecomendadosParaCliente(self, id_cliente, n):
@@ -98,6 +97,23 @@ class AcessaBD():
             "join visualizacao v on innertab.idcliente = v.idcliente and idproduto not in "+
             "(select idproduto from visualizacao where idcliente ="+str(id_cliente)+") limit "+str(n)+";")
         return [f[0] for f in self.cur.fetchall()]
+
+    
+    def _retorna_array(self, id_produto):
+        self.cur.execute(
+            "select arrayTAG from produto where idProduto = " + str(id_produto) +";")
+
+        resp = self.cur.fetchall()
+        return [i[0] for i in resp]
+
+    def busque_produtos_categoria_de(self, id_produto):
+        self.cur.execute(
+            "select idProduto, arrayTAG from produto where idProduto != " + str(id_produto)+
+            " and categoria = (select categoria from produto where idProduto = " + str(id_produto)+");")
+
+        resp = self.cur.fetchall()
+
+        return [i[0] for i in resp], [i[1] for i in resp], self._retorna_array(id_produto)
 
 # bd = AcessaBD()
         # print(bd)

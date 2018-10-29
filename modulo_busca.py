@@ -9,13 +9,15 @@ from sklearn.neighbors import radius_neighbors_graph
 class Pesquisa():
 
     def _nearest_neighbors(self, values, base, nbr_neighbors = 5):
+        # print(base)
+        # print(values)
         nn = NearestNeighbors(nbr_neighbors, metric='euclidean', algorithm='brute').fit(base)
         return nn.kneighbors(values)
 
 
     def busca_n_relacionados(self, values, base, Y, n=5):
         base = np.array(base)
-        values = np.array([values])
+        values = np.array(values)
         distances, indices = self._nearest_neighbors(values, base, n)
         # print(indices)
         return [Y[a] for a in indices[0]]
