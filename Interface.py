@@ -53,6 +53,9 @@ class Interface:
             return preco
         return vizualizacao
 
+    def busque_n_relacionados(self, id_produto, n):
+        vetores, ids = self.bdAcesso.busque_produtos_categoria_de(id_produto)
+
     def busque(self, busca):
         _, ids = self._devolveProdutos(busca.busca, busca.min_price, busca.max_price, busca.categoria, busca.ordenacao)
         return ids
