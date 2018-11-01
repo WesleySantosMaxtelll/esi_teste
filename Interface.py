@@ -8,19 +8,16 @@ from corretor import Corretor
 import re
 from Busca import Busca
 
-@Singleton
 class Interface:
     
     global stopwords
     global representacao
-    global bdAcesso
     global corretor
     global pesquisa
 
     def __init__(self):
         self.stopwords = nltk.corpus.stopwords.words('portuguese')
-        self.representacao = Representacao()
-        self.bdAcesso = AcessaBD()
+        self.representacao = Representacao.instance()
         self.corretor = Corretor()
         self.pesquisa = Pesquisa()
 
@@ -54,7 +51,7 @@ class Interface:
         return vizualizacao
 
     def busque_n_relacionados(self, id_produto, n):
-        ids, vetores, values = self.bdAcesso.busque_produtos_categoria_de(id_produto)
+        ids, vetores, values = AcessaBD().busque_produtos_categoria_de(id_produto)
         return self.pesquisa.busca_n_relacionados(values, vetores, ids, n)
 
 
@@ -65,44 +62,44 @@ class Interface:
 
     def _devolveProdutos(self, busca, min_preco, max_preco, categoria, ordenacao):
         if categoria and max_preco and min_preco and busca:
-            ids, base, vizualizacao, preco = self.bdAcesso.devolveProdutoComIntervaloDePrecoECategoria(min_preco, max_preco, categoria)
+            ids, base, vizualizacao, preco = sAcessaBD().devolveProdutoComIntervaloDePrecoECategoria(min_preco, max_preco, categoria)
             return self._ordene(self.pesquisa.busca_limite_distancia(self._representacao(busca), base, ids),
                                 self._define_ordenacao(ordenacao, vizualizacao, preco))
 
         if categoria and max_preco and busca:
-            ids, base, vizualizacao, preco = self.bdAcesso.devolveProdutosPorCategoriaComMaxPreco(max_preco, categoria)
+            ids, base, vizualizacao, preco = AcessaBD().devolveProdutosPorCategoriaComMaxPreco(max_preco, categoria)
             return self._ordene(self.pesquisa.busca_limite_distancia(self._representacao(busca), base, ids),
                                 self._define_ordenacao(ordenacao, vizualizacao, preco))
 
         if categoria and min_preco and busca:
-            ids, base, vizualizacao, preco = self.bdAcesso.devolveProdutosPorCategoriaComMinPreco(min_preco, categoria)
+            ids, base, vizualizacao, preco = AcessaBD().devolveProdutosPorCategoriaComMinPreco(min_preco, categoria)
             return self._ordene(self.pesquisa.busca_limite_distancia(self._representacao(busca), base, ids),
                                 self._define_ordenacao(ordenacao, vizualizacao, preco))
 
         if min_preco and max_preco and busca:
-            ids, base, vizualizacao, preco = self.bdAcesso.devolveProdutoComIntervaloDePreco(min_preco, max_preco)
+            ids, base, vizualizacao, preco = AcessaBD().devolveProdutoComIntervaloDePreco(min_preco, max_preco)
             return self._ordene(self.pesquisa.busca_limite_distancia(self._representacao(busca), base, ids),
                                 self._define_ordenacao(ordenacao, vizualizacao, preco))
 
         if categoria and busca:
-            ids, base, vizualizacao, preco = self.bdAcesso.devolveProdutosPorCategoria(categoria)
+            ids, base, vizualizacao, preco = AcessaBD().devolveProdutosPorCategoria(categoria)
             return self._ordene(self.pesquisa.busca_limite_distancia(self._representacao(busca), base, ids),
                                 self._define_ordenacao(ordenacao, vizualizacao, preco))
 
         if categoria:
-            ids, base, vizualizacao, preco = self.bdAcesso.devolveProdutosPorCategoria(categoria)
+            ids, base, vizualizacao, preco = AcessaBD().devolveProdutosPorCategoria(categoria)
             return self._ordene(ids,self._define_ordenacao(ordenacao, vizualizacao, preco))
 
         if busca:
-            ids, base, vizualizacao, preco = self.bdAcesso.devolveProdutos()
+            ids, base, vizualizacao, preco = AcessaBD().devolveProdutos()
             return self._ordene(self.pesquisa.busca_limite_distancia(self._representacao(busca), base, ids),
                                 self._define_ordenacao(ordenacao, vizualizacao, preco))
 
-        ids, base, vizualizacao, preco = self.bdAcesso.devolveProdutos()
+        ids, base, vizualizacao, preco = AcessaBD().devolveProdutos()
         return ids
 
     def devolveNprodutosRecomendados(self, id_cliente, N):
-        return self.bdAcesso.devolveNrecomendadosParaCliente(id_cliente, N)
+        return AcessaBD().devolveNrecomendadosParaCliente(id_cliente, N)
         # busca = [self.representacao.devolveVetor(word for word in words)]
         # produtos = bdAcesso.devolveProdutoComIntervaloDePrecoECategoria(min_preco, max_preco, categoria)
 

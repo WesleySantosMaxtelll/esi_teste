@@ -4,6 +4,9 @@ import numpy as np
 from sklearn.neighbors import NearestNeighbors
 import time
 import sys
+from Singleton import Singleton
+
+@Singleton
 class Representacao():
     global model
     def __init__(self):

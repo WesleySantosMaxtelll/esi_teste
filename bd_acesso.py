@@ -1,5 +1,6 @@
 import psycopg2
 import datetime
+from Singleton import Singleton
 
 class AcessaBD():
     global conn

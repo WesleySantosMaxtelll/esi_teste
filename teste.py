@@ -1,4 +1,8 @@
 from sklearn.neighbors import NearestNeighbors
+from DecodificadorJson import InterfaceJson
+import threading
+import time
+import _thread
 X = [[0,0], [1,1], [5,5], [-2,-2]]
 Y = [[-1,-1]]
 # print(X)
@@ -69,16 +73,18 @@ Y = [[-1,-1]]
 #     bd.inserirProduto(Y[i], categorias[i], values, preco[i])
 
 import time
-
 from Busca import Busca
 from Interface import Interface
+from representacao import Representacao
 
-
+# r = Representacao.instance()
 
 print('inicio')
-i = Interface.instance()
+b = 'cadeira,blusa,10,90,preco'
 
-print(i.busque_n_relacionados(10, 5))
+# i = Interface.instance()
+#
+# print(i.busque_n_relacionados(10, 5))
 #
 # b = Busca()
 # b.atribui_ordenacao('preco')
@@ -88,14 +94,38 @@ print(i.busque_n_relacionados(10, 5))
 
 # print(id(b))
 # i.busque(b)
-print('comeca busca')
-initial_time = time.time()
 
+print('mil sem thread')
+initial_time = time.time()
+z = InterfaceJson()
+
+for _ in range(10):
+    i = InterfaceJson()
+    i.decodifica_requisicao_busca(b,)
 # print(i.devolveNprodutosRecomendados(5, 10))
 
 # print(len(i.busque(b)))
 
-print('carregou')
+final_time = time.time()
+print('total: ' + str(final_time - initial_time) + " secs")
+
+t = []
+
+
+print('\nmil com thread')
+initial_time = time.time()
+for _ in range(10):
+    i = InterfaceJson()
+    t.append(threading.Thread(target=i.decodifica_requisicao_busca, args=(b,)))
+
+for n in range(10):
+    t[n].start()
+
+#for n in range(10):
+ #   t[n].join()
+# print(i.devolveNprodutosRecomendados(5, 10))
+
+# print(len(i.busque(b)))
 final_time = time.time()
 print('total: ' + str(final_time - initial_time) + " secs")
 # c = Busca.instance()
